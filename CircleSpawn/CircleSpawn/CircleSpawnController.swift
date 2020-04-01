@@ -14,24 +14,24 @@ class CircleSpawnController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let tripleTap = UITapGestureRecognizer(target: self, action: #selector(handleTripleTap(_:)))
-        tripleTap.numberOfTapsRequired = 3
-        view.addGestureRecognizer(tripleTap)
-    }
-
-    @objc func handleTripleTap(_ tap: UITapGestureRecognizer) {
-        let spawnedView = UICircleView(backgroundColor: UIColor.randomBrightColor(), center: tap.location(in: view))
-        view.addSubview(spawnedView)
-        circles.append(spawnedView)
-        
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
         doubleTap.numberOfTapsRequired = 2
-        spawnedView.addGestureRecognizer(doubleTap)
-        
-        spawnedView.easeIn()
+        view.addGestureRecognizer(doubleTap)
     }
 
     @objc func handleDoubleTap(_ tap: UITapGestureRecognizer) {
+        let circle = UICircleView(backgroundColor: UIColor.randomBrightColor(), center: tap.location(in: view))
+        view.addSubview(circle)
+        circles.append(circle)
+        
+        let tripleTap = UITapGestureRecognizer(target: self, action: #selector(handleTripleTap(_:)))
+        tripleTap.numberOfTapsRequired = 3
+        circle.addGestureRecognizer(tripleTap)
+        
+        circle.easeIn()
+    }
+
+    @objc func handleTripleTap(_ tap: UITapGestureRecognizer) {
         guard let view = tap.view else { return }
         let circle = view as! UICircleView
         circle.easeOut() { [weak self] completed in
