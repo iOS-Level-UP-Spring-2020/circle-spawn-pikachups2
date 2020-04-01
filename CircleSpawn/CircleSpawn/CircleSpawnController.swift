@@ -27,6 +27,10 @@ class CircleSpawnController: UIViewController {
         view.addSubview(spawnedView)
         circles.append(spawnedView)
         
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
+        doubleTap.numberOfTapsRequired = 2
+        spawnedView.addGestureRecognizer(doubleTap)
+        
         spawnedView.alpha = 0
         spawnedView.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
         UIView.animate(withDuration: 0.2, animations: {
@@ -36,6 +40,19 @@ class CircleSpawnController: UIViewController {
             UIView.animate(withDuration: 0.1, animations: {
                 spawnedView.transform = .identity
             })
+        })
+    }
+
+    @objc func handleDoubleTap(_ tap: UITapGestureRecognizer) {
+        guard let view = tap.view else { return }
+
+        UIView.animate(withDuration: 0.2, animations: {
+            view.alpha = 0
+            view.transform = CGAffineTransform(scaleX: 2, y: 2)
+        }, completion: { [weak self] completed in
+            if let index = self?.circles.firstIndex(of: view) {
+                self?.circles.remove(at: index)
+            }
         })
     }
 }
