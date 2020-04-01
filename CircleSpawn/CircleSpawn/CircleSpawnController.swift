@@ -8,7 +8,8 @@ class CircleSpawnController: UIViewController {
 		view = UIView()
 		view.backgroundColor = .white
 	}
-    private var circles: [UIView] = []
+    
+    private var circles: [UICircleView] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,11 +20,7 @@ class CircleSpawnController: UIViewController {
     }
 
     @objc func handleTripleTap(_ tap: UITapGestureRecognizer) {
-        let size: CGFloat = 100
-        let spawnedView = UIView(frame: CGRect(origin: .zero, size: CGSize(width: size, height: size)))
-        spawnedView.center = tap.location(in: view)
-        spawnedView.backgroundColor = UIColor.randomBrightColor()
-        spawnedView.layer.cornerRadius = size * 0.5
+        let spawnedView = UICircleView(backgroundColor: UIColor.randomBrightColor(), center: tap.location(in: view))
         view.addSubview(spawnedView)
         circles.append(spawnedView)
         
@@ -31,28 +28,16 @@ class CircleSpawnController: UIViewController {
         doubleTap.numberOfTapsRequired = 2
         spawnedView.addGestureRecognizer(doubleTap)
         
-        spawnedView.alpha = 0
-        spawnedView.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
-        UIView.animate(withDuration: 0.2, animations: {
-            spawnedView.alpha = 1
-            spawnedView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }, completion: { completed in
-            UIView.animate(withDuration: 0.1, animations: {
-                spawnedView.transform = .identity
-            })
-        })
+        spawnedView.easeIn()
     }
 
     @objc func handleDoubleTap(_ tap: UITapGestureRecognizer) {
         guard let view = tap.view else { return }
-
-        UIView.animate(withDuration: 0.2, animations: {
-            view.alpha = 0
-            view.transform = CGAffineTransform(scaleX: 2, y: 2)
-        }, completion: { [weak self] completed in
-            if let index = self?.circles.firstIndex(of: view) {
+        let circle = view as! UICircleView
+        circle.easeOut() { [weak self] completed in
+            if let index = self?.circles.firstIndex(of: circle) {
                 self?.circles.remove(at: index)
             }
-        })
+        }
     }
 }
