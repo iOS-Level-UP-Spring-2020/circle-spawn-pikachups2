@@ -40,4 +40,14 @@ class CircleSpawnController: UIViewController {
             }
         }
     }
+    
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?){
+        for circle in circles {
+            circle.easeOut() { [weak self] completed in
+                if let index = self?.circles.firstIndex(of: circle) {
+                    self?.circles.remove(at: index)
+                }
+            }
+        }
+    }
 }
