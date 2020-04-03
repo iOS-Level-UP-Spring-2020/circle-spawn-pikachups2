@@ -9,12 +9,20 @@
 import Foundation
 import UIKit
 
+protocol CircleViewDelegate: class {
+    func bringToFront(subview: CircleView)
+}
+
 class CircleView: UIView {
     
     var pan = UIPanGestureRecognizer()
     var longPress = UILongPressGestureRecognizer()
     
-    init(backgroundColor: UIColor, center: CGPoint) {
+    weak var delegate: CircleViewDelegate?
+    
+    init(delegate: CircleViewDelegate, backgroundColor: UIColor, center: CGPoint) {
+        
+        self.delegate = delegate
         let size: CGFloat = 100
         super.init(frame: CGRect(origin: .zero, size: CGSize(width: size, height: size)))
         self.center = center
@@ -87,6 +95,7 @@ class CircleView: UIView {
         switch press.state {
         case .began:
             circle.onSelect()
+            delegate?.bringToFront(subview: self)
         case .ended, .cancelled:
             circle.onSelectDismissed()
         default:
