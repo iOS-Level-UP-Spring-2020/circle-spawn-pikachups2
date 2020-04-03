@@ -10,6 +10,10 @@ import Foundation
 import UIKit
 
 class UICircleView: UIView {
+    
+    var pan = UIPanGestureRecognizer()
+    var longPress = UILongPressGestureRecognizer()
+    
     init(backgroundColor: UIColor, center: CGPoint) {
         let size: CGFloat = 100
         super.init(frame: CGRect(origin: .zero, size: CGSize(width: size, height: size)))
@@ -17,8 +21,13 @@ class UICircleView: UIView {
         self.backgroundColor = backgroundColor
         self.layer.cornerRadius = size * 0.5
         
-        let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        pan.addTarget(self, action: #selector(handlePan(_:)))
+        pan.delegate = self
         self.addGestureRecognizer(pan)
+        
+        longPress.addTarget(self, action: #selector(handleLongPress(_:)))
+        longPress.delegate = self
+        self.addGestureRecognizer(longPress)
     }
 
     func easeIn() {
@@ -59,14 +68,25 @@ class UICircleView: UIView {
         guard  let view = pan.view else { return }
         let circle = view as! UICircleView
         let translation = pan.translation(in: view)
+        if longPress.state == .changed {
+            switch pan.state {
+            case .changed:
+                circle.center.x += translation.x
+                circle.center.y += translation.y
+                pan.setTranslation(.zero, in: circle)
+            default:
+                return
+            }
+        }
+    }
+    
+    @objc func handleLongPress(_ press: UILongPressGestureRecognizer) {
+        guard let view = press.view else { return }
+        let circle = view as! UICircleView
         
-        switch pan.state {
+        switch press.state {
         case .began:
             circle.onSelect()
-        case .changed:
-            circle.center.x += translation.x
-            circle.center.y += translation.y
-            pan.setTranslation(.zero, in: circle)
         case .ended, .cancelled:
             circle.onSelectDismissed()
         default:
@@ -76,5 +96,11 @@ class UICircleView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension UICircleView: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return (gestureRecognizer == longPress && otherGestureRecognizer == pan)
     }
 }
