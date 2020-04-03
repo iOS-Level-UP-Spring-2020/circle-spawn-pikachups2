@@ -50,12 +50,12 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		3CC5435D2434F0650040D2B2 /* UIElements */ = {
+		3CC5435D2434F0650040D2B2 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				3CC5435E2434F0980040D2B2 /* CircleView.swift */,
 			);
-			path = UIElements;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		77A8DE3B24329E3E00A22228 = {
@@ -77,7 +77,7 @@
 		77A8DE4624329E3E00A22228 /* CircleSpawn */ = {
 			isa = PBXGroup;
 			children = (
-				3CC5435D2434F0650040D2B2 /* UIElements */,
+				3CC5435D2434F0650040D2B2 /* Views */,
 				3CC543582434E9BE0040D2B2 /* Extensions */,
 				77A8DE4724329E3E00A22228 /* AppDelegate.swift */,
 				77A8DE4924329E3E00A22228 /* SceneDelegate.swift */,
