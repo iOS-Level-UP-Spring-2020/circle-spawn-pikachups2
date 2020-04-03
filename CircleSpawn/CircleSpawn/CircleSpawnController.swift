@@ -1,6 +1,6 @@
 import UIKit
 
-class CircleSpawnController: UIViewController {
+class CircleSpawnController: UIViewController, UIGestureRecognizerDelegate {
 
 	// TODO: Assignment 1
 
@@ -16,6 +16,7 @@ class CircleSpawnController: UIViewController {
 
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
         doubleTap.numberOfTapsRequired = 2
+        doubleTap.delegate = self
         view.addGestureRecognizer(doubleTap)
     }
 
@@ -49,5 +50,9 @@ class CircleSpawnController: UIViewController {
                 }
             }
         }
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
