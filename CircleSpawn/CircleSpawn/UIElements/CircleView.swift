@@ -1,5 +1,5 @@
 //
-//  UICircleView.swift
+//  CircleView.swift
 //  CircleSpawn
 //
 //  Created by Krystian Duma on 01/04/2020.
@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class UICircleView: UIView {
+class CircleView: UIView {
     
     var pan = UIPanGestureRecognizer()
     var longPress = UILongPressGestureRecognizer()
@@ -66,7 +66,7 @@ class UICircleView: UIView {
     
     @objc func handlePan(_ pan: UIPanGestureRecognizer) {
         guard  let view = pan.view else { return }
-        let circle = view as! UICircleView
+        let circle = view as! CircleView
         let translation = pan.translation(in: view)
         if longPress.state == .changed {
             switch pan.state {
@@ -82,7 +82,7 @@ class UICircleView: UIView {
     
     @objc func handleLongPress(_ press: UILongPressGestureRecognizer) {
         guard let view = press.view else { return }
-        let circle = view as! UICircleView
+        let circle = view as! CircleView
         
         switch press.state {
         case .began:
@@ -99,7 +99,7 @@ class UICircleView: UIView {
     }
 }
 
-extension UICircleView: UIGestureRecognizerDelegate {
+extension CircleView: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return (gestureRecognizer == longPress && otherGestureRecognizer == pan)
     }
