@@ -17,6 +17,7 @@ class CircleView: UIView {
     
     var pan = UIPanGestureRecognizer()
     var longPress = UILongPressGestureRecognizer()
+    var handleLocation = CGPoint()
     
     weak var delegate: CircleViewDelegate?
     
@@ -75,13 +76,12 @@ class CircleView: UIView {
     @objc func handlePan(_ pan: UIPanGestureRecognizer) {
         guard  let view = pan.view else { return }
         let circle = view as! CircleView
-        let translation = pan.translation(in: view)
+        let location = pan.location(in: superview)
         if longPress.state == .changed {
             switch pan.state {
             case .changed:
-                circle.center.x += translation.x
-                circle.center.y += translation.y
-                pan.setTranslation(.zero, in: circle)
+                circle.frame.origin.x = location.x - handleLocation.x
+                circle.frame.origin.y = location.y - handleLocation.y
             default:
                 return
             }
@@ -95,6 +95,7 @@ class CircleView: UIView {
         switch press.state {
         case .began:
             circle.onSelect()
+            handleLocation = press.location(in: self)
             delegate?.bringToFront(subview: self)
         case .ended, .cancelled:
             circle.onSelectDismissed()
