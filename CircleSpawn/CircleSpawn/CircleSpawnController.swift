@@ -9,7 +9,7 @@ class CircleSpawnController: UIViewController, UIGestureRecognizerDelegate {
 		view.backgroundColor = .white
 	}
     
-    private var circles: [UICircleView] = []
+    private var circles: [CircleView] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,7 +21,7 @@ class CircleSpawnController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     @objc func handleDoubleTap(_ tap: UITapGestureRecognizer) {
-        let circle = UICircleView(backgroundColor: UIColor.randomBrightColor(), center: tap.location(in: view))
+        let circle = CircleView(delegate: self, backgroundColor: UIColor.randomBrightColor(), center: tap.location(in: view))
         view.addSubview(circle)
         circles.append(circle)
         
@@ -34,7 +34,7 @@ class CircleSpawnController: UIViewController, UIGestureRecognizerDelegate {
 
     @objc func handleTripleTap(_ tap: UITapGestureRecognizer) {
         guard let view = tap.view else { return }
-        let circle = view as! UICircleView
+        let circle = view as! CircleView
         circle.easeOut() { [weak self] completed in
             if let index = self?.circles.firstIndex(of: circle) {
                 self?.circles.remove(at: index)
@@ -54,5 +54,11 @@ class CircleSpawnController: UIViewController, UIGestureRecognizerDelegate {
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
+    }
+}
+
+extension CircleSpawnController: CircleViewDelegate {
+    func bringToFront(subview: CircleView) {
+        self.view.bringSubviewToFront(subview)
     }
 }
